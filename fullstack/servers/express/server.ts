@@ -14,85 +14,86 @@ app.use(express.json());
 
 // Middleware with paywall UI (facilitator sponsored)
 app.use('/api/premium', solanaPaymentMiddleware({
-    payTo: PAYMENT_RECIPIENT,
-    routes: {
-        '/*': {
-            price: '$0.01',
-            network: 'solana-devnet',
-            mint: TokenMint.USDC.devnet,
-            description: 'Access premium API (USDC, devnet)',
-            maxTimeoutSeconds: 120
-        }
-    },
-    facilitator: {
-        url: 'http://localhost:3011',
-        broadcastMode: 'facilitator_sponsored'
-    },
-    paywall: {
-        appName: 'Solana Paywall Server',
-        walletAdapters: ['phantom', 'solflare', 'backpack'],
-        enableUserSelfBroadcast: false
-    },
+  payTo: PAYMENT_RECIPIENT,
+  routes: {
+    '/*': {
+      price: '$0.01',
+      network: 'solana-devnet',
+      mint: TokenMint.USDC.devnet,
+      description: 'Access premium API (USDC, devnet)',
+      maxTimeoutSeconds: 120
+    }
+  },
+  facilitator: {
+    url: 'http://localhost:3011',
+    broadcastMode: 'facilitator_sponsored'
+  },
+  paywall: {
+    appName: 'Solana Paywall Server',
+    walletAdapters: ['phantom', 'solflare', 'backpack'],
+    enableUserSelfBroadcast: false
+  },
+  mode: 'fullscreen'
 }));
 
 app.get('/api/premium/data', (req, res) => {
-    res.json({
-        message: '✅ Bạn đã thanh toán để xem nội dung này.',
-        timestamp: new Date().toISOString(),
-        network: 'solana-devnet',
-        token: 'USDC'
-    });
+  res.json({
+    message: '✅ Bạn đã thanh toán để xem nội dung này.',
+    timestamp: new Date().toISOString(),
+    network: 'solana-devnet',
+    token: 'USDC'
+  });
 });
 
 app.get('/health', (req, res) => {
-    res.json({
-        status: 'ok',
-        service: 'solana-paywall-server',
-        timestamp: new Date().toISOString()
-    });
+  res.json({
+    status: 'ok',
+    service: 'solana-paywall-server',
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Group endpoints by network for homepage rendering
 const groupedEndpoints = [
-    {
-        network: 'Solana Devnet',
-        endpoints: [
-            {
-                path: '/api/premium/data',
-                desc: '$0.01 USDC (Facilitator pays gas, devnet)'
-            },
-            {
-                path: '/api/self-pay/data',
-                desc: '$0.02 USDC (User pays gas, devnet)'
-            },
-            {
-                path: '/api/sol-premium',
-                desc: '0.001 SOL (Facilitator sponsored, devnet)'
-            },
-            {
-                path: '/api/usdc-premium',
-                desc: '1 USDC (Facilitator sponsored, devnet)'
-            },
-            {
-                path: '/api/devnet/usdc-premium/data',
-                desc: '1 USDC (Facilitator sponsored, devnet, new endpoint)'
-            }
-        ]
-    },
-    {
-        network: 'Other',
-        endpoints: [
-            {
-                path: '/health',
-                desc: 'Free endpoint (no payment required)'
-            }
-        ]
-    }
+  {
+    network: 'Solana Devnet',
+    endpoints: [
+      {
+        path: '/api/premium/data',
+        desc: '$0.01 USDC (Facilitator pays gas, devnet)'
+      },
+      {
+        path: '/api/self-pay/data',
+        desc: '$0.02 USDC (User pays gas, devnet)'
+      },
+      {
+        path: '/api/sol-premium',
+        desc: '0.001 SOL (Facilitator sponsored, devnet)'
+      },
+      {
+        path: '/api/usdc-premium',
+        desc: '1 USDC (Facilitator sponsored, devnet)'
+      },
+      {
+        path: '/api/devnet/usdc-premium/data',
+        desc: '1 USDC (Facilitator sponsored, devnet, new endpoint)'
+      }
+    ]
+  },
+  {
+    network: 'Other',
+    endpoints: [
+      {
+        path: '/health',
+        desc: 'Free endpoint (no payment required)'
+      }
+    ]
+  }
 ];
 
 
 app.get('/', (req, res) => {
-    res.send(`
+  res.send(`
     <html>
       <body style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
         <h1>🚀 Solana x402 Payment Demo</h1>
@@ -149,5 +150,5 @@ app.get('/', (req, res) => {
 
 
 app.listen(PORT, () => {
-    console.log(`🚀 Server đang chạy tại http://localhost:${PORT}`);
+  console.log(`🚀 Server đang chạy tại http://localhost:${PORT}`);
 });
